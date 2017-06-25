@@ -1,0 +1,97 @@
+<?php
+
+function dexp_zap_form_alter(&$form, &$form_state, $form_id) {
+  if( $form_id == 'page_node_form'){
+    $node = $form_state['node'];
+    if($node->type != 'page') return;
+    if(!isset($node->nid)) $node->nid = 0;
+	$presets = theme_get_setting('drupalexp_presets', variable_get('theme_default', NULL));
+    if ($presets) {
+      $presets = json_decode(base64_decode($presets));
+    }else{
+      $presets = array();
+    }
+    $preset_options = array('not-set'=>'Default Theme Settings');
+    foreach($presets as $key => $preset){
+      $preset_options[$key] = $preset->key;
+    }
+    $form['dexp_page_settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('DruaplExp Page Settings'),
+      '#group' => 'additional_settings',
+      '#weight' => 100
+    );
+    $form['dexp_page_settings']['dexp_page_fullwidth'] = array(
+      '#type' => 'select',
+      '#title' => t('Force Content Full Width'),
+      '#options' => array(0=>t('No'),1=>t('Yes')),
+      '#default_value' => variable_get($node->nid.'dexp_page_fullwidth',0),
+    );
+    $form['dexp_page_settings']['dexp_page_header'] = array(
+      '#type' => 'select',
+      '#title' => t('Header style'),
+      '#options' => array('not-set'=>t('Default Theme Settings'),''=>t('White'),'header-overlay'=>t('Overlay')),
+      '#default_value' => variable_get($node->nid.'dexp_page_header','not-set'),
+    );
+    $form['dexp_page_settings']['dexp_page_preset'] = array(
+      '#type' => 'select',
+      '#title' => t('Preset Color'),
+      '#options' => $preset_options,
+      '#default_value' => variable_get($node->nid.'dexp_page_preset','not-set'),
+    );
+
+    $form['actions']['submit']['#submit'][] = 'dexp_zap_node_page_submit';
+  }
+}
+
+function dexp_zap_node_page_submit(&$form, &$form_state){
+  $node = $form_state['node'];
+  $values = $form_state['values'];
+  if(isset($node->nid)){
+    foreach($values as $k => $v){
+      if(strpos($k, 'dexp_page_')===0){
+        variable_set($node->nid.$k, $v);
+      }
+    }
+  }
+}
+
+function dexp_zap_form_portfolio_node_form_alter(&$form, &$form_state) {
+    // Define field set in additional settings group    
+    $form['dexp_page_settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Portfolio Style Settings'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#weight' => 10,
+      '#group' => 'additional_settings',
+    );
+    // Add checkbox option
+    $form['dexp_page_settings']['portfolio_style'] = array(
+      '#type' => 'select',
+      '#title' => t('Portfolio Styles'),
+      '#options' => array(0=>t('Style 01'),1=>t('Style 02')),
+      //'#default_value' => variable_get($form['#node']->nid.'_portfolio_style',0),
+    );
+    // Set default value from automatically saved config variable
+	if(isset($form['#node']->nid)){
+		$form['dexp_page_settings']['portfolio_style']['#default_value'] = variable_get($form['#node']->nid.'_portfolio_style', 0);
+	}   
+    $form['#submit'][] = 'dexp_zap_portfolio_node_form_submit';    
+    
+}
+function dexp_zap_portfolio_node_form_submit ($form, &$form_state) {
+	if (isset($form['#node']->nid)){
+		$special = $form_state['values']['portfolio_style'];
+		variable_set($form['#node']->nid.'_portfolio_style', $special);
+	}  
+}
+/*
+function dexp_voyo_preprocess_html(&$vars) {
+  $node = menu_get_object('node');
+  if($node && $node->type=='page'){
+    $header = variable_get($node->nid.'dexp_page_header',0);
+    $vars['classes_array'][] = $header;
+  }
+}
+*/

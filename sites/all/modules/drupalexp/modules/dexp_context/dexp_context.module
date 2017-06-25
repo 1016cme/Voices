@@ -1,0 +1,40 @@
+<?php
+/**
+* Implementation of hook_context_registry().
+*/
+function dexp_context_context_registry() {
+    return array(
+        'reactions' => array(
+            'dexp_context_logo' => array(
+                'title' => t('Change site logo'),
+                'description' => t('Change site logo.'),
+                'plugin' => 'dexp_context_context_condition',
+            ),
+        ),
+    );
+}
+
+/**
+* Implementation of hook_context_plugins().
+*/
+function dexp_context_context_plugins() {
+    $plugins = array();
+    $plugins['dexp_context_context_condition'] = array(
+        'handler' => array(
+            'path' => drupal_get_path('module', 'dexp_context'),
+            'file' => 'dexp_context.context.inc',
+            'class' => 'dexp_context_context_condition',
+            'parent' => 'context_reaction_theme',
+        ),
+    );
+    return $plugins;
+}
+
+/**
+ * Implementation of hook_preprocess_html().
+ */
+function dexp_context_preprocess_page(&$vars) {
+  if ($plugin = context_get_plugin('reaction', 'dexp_context_logo')) {
+    $plugin->execute($vars);
+  }
+}

@@ -1,0 +1,35 @@
+<?php
+function dexp_grid_schema() {
+  $schema ['dexp_grid'] = array(
+    'description' => 'The base table for dexp grid masonry.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The primary identifier for a slide.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'view' => array(
+        'description' => 'The views name',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'item' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'width' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'height' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}

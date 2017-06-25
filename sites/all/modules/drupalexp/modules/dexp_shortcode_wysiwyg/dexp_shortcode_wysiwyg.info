@@ -1,0 +1,9 @@
+name = DrupalExp Shortcode Wysiwyg
+description = "Shortcode Wysiwyg integration"
+core = 7.x
+package = DrupalExp
+dependencies[] = shortcode
+dependencies[] = wysiwyg
+
+version = "7.x-1.0"
+core = "7.x"

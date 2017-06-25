@@ -1,0 +1,4 @@
+name = DrupalExp Zap Theme Settings
+description = "Providers page settings for ZAP theme."
+core = 7.x
+package = DrupalExp

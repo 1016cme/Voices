@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Installation file for Dexp Views BxSlider
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function dexp_views_bxslider_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    if (!libraries_get_path('bxslider')) {
+      $requirements['bxslider'] = array(
+          'title' => t('bxSlider library'),
+          'description' => t('
+            bxSlider library is required.<br/>
+            <ul>
+            <li>
+            Download the required libraries from
+            <a href="@library_url">the bxSlider project</a>
+            and place it in <code>@install_path</code>
+            </li>
+            </ul>',
+          array(
+            '@help_url' => url('https://drupal.org/project/bxslider'),
+            '@library_url' => 'http://bxslider.com/lib/jquery.bxslider.zip',
+            '@install_path' => 'sites/all/libraries/bxslider',
+          )),
+          'value' => t('The bxSlider library is required.'),
+          'severity' => REQUIREMENT_ERROR,
+      );
+    } else {
+      $requirements['bxslider'] = array(
+          'title' => t('bxSlider'),
+          'description' => t('The bxSlider library is successfully installed.'),
+          'value' => t('The bxSlider library is successfully installed.'),
+          'severity' => REQUIREMENT_OK,
+      );
+    }
+  }
+  return $requirements;
+}

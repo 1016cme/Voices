@@ -1,0 +1,7 @@
+name = DrupalExp Context
+description = "Create context condition for context"
+package = DrupalExp
+core = 7.x
+version = "7.x-1.0"
+
+dependencies[]=context

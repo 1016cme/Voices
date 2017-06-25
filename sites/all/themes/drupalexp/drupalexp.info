@@ -1,0 +1,9 @@
+name = DrupalExp
+description = "Drupal theme framework with drag & drop layouts builded"
+core = 7.x
+version = 7.x-1.1
+engine = phptemplate
+
+; Required Core Regions
+
+lessc[] = lessc/mixin.less
